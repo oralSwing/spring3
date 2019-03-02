@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 确定增强的目标 -->
+	<bean id="customerService" class="cn.itcast.spring.a_proxy.CustomerServiceImpl"/>
+	<bean id="productService" class="cn.itcast.spring.a_proxy.ProductService"/>
+	
+	<!-- Advice通知、增强 -->
+	<bean id="myAdvice" class="cn.itcast.spring.b_aop.LogTimeAdvice"/>
+	
+	<!-- 配置aop的切入点和切面 -->
+	<aop:config>
+		<!-- 切入点（你要增强哪些方法）配置 -->
+		<!-- 
+		expression：切入点表达式,作用是来配置你要增强的哪些类的哪些方法,如：bean(customerService)，对customerServicebean中的所有方法进行增强了
+		 -->
+		<!-- <aop:pointcut expression="bean(customerService)" id="myPointcut"/> -->
+		<!-- 增强所有的以Service为结尾的命名的Bean，拦截这些bean中的所有的方法 -->
+		<aop:pointcut expression="bean(*Service)" id="myPointcut"/>
+		<!-- 配置切面（你要对哪些方法进行怎样的增强），简单说，从配置角度上说，将切入点和通知联系在一起 -->
+		<!-- 传统的aop的配置，它的增强bean必须是继承了对应的接口
+		advice-ref:引用通知的bean的名字
+		pointcut-ref：引用切入点的名字
+		 -->
+		<aop:advisor advice-ref="myAdvice" pointcut-ref="myPointcut"/>
+		<!-- 采用asepectj的配置方式 ，通知无需继承任何接口，编码简单-->
+		<!-- <aop:aspect></aop:aspect> -->
+	</aop:config>
+
+
+</beans>
